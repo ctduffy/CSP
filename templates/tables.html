@@ -1,0 +1,33 @@
+<!-- HTML page that show the tables -->
+<html>
+	<head>
+		<title>Tables</title>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+		<script src='/socket.io/socket.io.js'></script>
+		<script type="text/javascript" src="../tables.js"></script>
+
+		<link rel="stylesheet" href="../style1.css" type="text/css" />
+		<meta name="index"/>
+	</head>
+	<body>
+		<nav id="navigation">
+			<a href="/" id="home" class="topbutton">Home</a>
+			<a id="edit" class="topbutton" onclick="manual_edit()">Manual Edit</a>
+			<a id="print" class="topbutton" onclick="print_this()">Print</a>
+		</nav>
+
+		<div id="main">
+			<p id="message" style="margin: -10px 0 0 0; letter-spacing: 1px; font-size: 20px; display: none">Select two names, then click <button id="switch" style="font-size: 16px; letter-spacing: 1px; background-color: transparent; color: #fff; border-radius: 1px;">SWITCH</button></p>
+			{{#tables}}
+			<div class="table">
+				<h1 class="table_num">Table {{tableNum}}</h1>
+				<hr class="line">
+				{{#kids}}
+					<p class="kid" id="{{kidID}}">{{kid}}</p>
+				{{/kids}}
+			</div>
+			{{/tables}}
+		</div>
+	</body>
+</html>
+

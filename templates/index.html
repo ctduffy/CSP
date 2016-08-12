@@ -1,0 +1,194 @@
+<!-- First HTML page -->
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Lunch Tables</title>
+		<script src='https://ajax.googleapis.com/ajax/tdbs/jquery/2.2.0/jquery.min.js'></script>
+        <script type="text/javascript" src='https://code.jquery.com/jquery-2.1.1.min.js'></script>
+		<script src='/socket.io/socket.io.js'></script>
+
+		<script type="text/javascript" src="../index.js"></script>
+		<link rel="stylesheet" href="../style.css" type="text/css" />
+		<meta name="index"/>
+	</head>
+	<body>
+		<div id="wholePage">
+		<div id="banner">
+			<h1>Create perfect lunch tables</h1>
+			<a href="#edit" class="topbutton">Edit Lists</a>
+			<a href="#generate" class="topbutton">Generate Tables</a>
+		</div>
+
+		<div id="welcome">
+			<p>Designed specifically for the second grade team at St. Anne's Belfield School, this site uses an object oriented Javascript algorithm to generate optimal lunch table combinations. With teacher input, the students will be equally distributed to tables based on both gender and personality traits. Once the tables are generated, teachers will have the ability to manually prohibit certain combintaions of students from sitting together.</p>
+			<img src="../images/caf.jpg" class="pic">
+		</div>
+
+		<div id="main">
+
+		<div id="edit">
+			<h1>Edit Lists of Students</h1>
+			<h4>Choose which group of kids you want to edit, or create a new group.</h4>
+			
+			<ul id="grades" class="collapsible" data-collapsible="accordion">
+				{{#groupList}}
+				<li>
+				<h2 class="collapsible-header">Class of {{groupName}}</h2>
+				<div class="collapsible-body">
+					<h3>Please fill in this table with each kid's traits so we can put them at the best tables</h3>
+					<h3 style ="display: none;"><button class="small_button" name="butt" onclick="blacklist()" id="blacklist_button">Edit Blacklist</button></h3>
+					<div id="black" style="text-align: center; display: none; width: 50%; margin-bottom: 10px; color: #fff;">
+						<p style="margin-left: 25%; width: 500px">Please choose two names and then click
+						<a id="switch" style="cursor: pointer; font-weight: bold;">SWITCH</a></p>
+						<table id="blacklist_table" border=".5">
+						{{#blacklist}}
+							{{#pair}}
+								<tr>
+									<td class="k">{{k1}}</td>
+									<td class="k">{{k2}}</td>
+								</tr>
+							{{/pair}}
+						{{/blacklist}}
+						</table>
+						<p><a id="add" style="margin-left: 92%; cursor: pointer; font-weight: bold;">ADD</a></p>
+					</div>
+					
+					<table id="kids_table1">
+						<tr class="headers">
+							<th>Name</th>
+							<th>Gender</th>
+							<th>Disruptive</th>
+							<th>Social</th>
+						</tr>
+						{{#kidsList}}
+						<tr>
+							{{#kid}}
+							<td name="name" class="namebox">{{kidName}}</th>
+							<td><form class="radio"><input id= "M" type="radio"name="gender" {{male}} value="">M
+								<input id="F" type="radio" name="gender" {{female}} value="">F
+							</form></th>
+							<td><input type="checkbox" name="disrupt" {{disruptive}} value=""></th>
+							<td><input type="checkbox" name="social" {{social}} value=""></th>
+							{{/kid}}
+						</tr>
+						{{/kidsList}}
+					</table> 
+					<h4 class="message">When finished, <a href="#generate">generate tables</a> for these kids</h4>
+				</div>
+				</li>
+				{{/groupList}}
+				<li>
+				<h2 class="collapsible-header" id="newgroup">NEW GROUP</h2>
+				<div class="collapsible-body">
+					<div id="updates">
+						<input id="new_kids" class="small_field" type="text" size="15" placeholder="Number of Kids">
+						<button class="small_button" id="kids_number">Update</button>
+						<input id="new_name" class="small_field" type="text" size="15" placeholder="Graduation Year">
+						<button class="small_button" id="rename">Update</button>
+					</div>
+					<h3>Please fill in this table with each kid's name and traits so we can put them at the best tables</h3>
+					<table id="new_kids_table">
+						<tr class="headers">
+							<th>Name</th>
+							<th>Gender</th>
+							<th>Disruptive</th>
+							<th>Social</th>
+						</tr>
+						<tr class = 'tri'>
+							<td name="name" class = 'name' class="namebox"><input type="text" size="12"></input></th>
+							<td><form class="radio"><input type="radio"  name="gender" value="1">M
+								<input type="radio" name="gender" value="0">F</form></td>
+							<td><input type="checkbox" name="disrupt" value="rowdy"></td>
+							<td><input type="checkbox" name="social" value="social"></td>
+						</tr>
+					</table> 
+					<h4 class="message">When finished, <a id="save">save</a> this group</h4>
+				</div>
+				</li>
+			</ul>
+		</div>
+
+		<div id="generate">
+			<h1>Generate Tables!</h1>
+			<h4>Please input the necessary information for us to generate lunch tables.</h4>
+			<h4 id="aware">Be aware that the process of placing students may take a few minutes.</h4>
+			<div id="constraints">
+				<h2>Tables and Chairs</h2>
+				<h3>
+				<select id="num_of_tables1"> 
+					<option value="0">----</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+					<option value="5">5</option>
+					<option value="6">6</option>
+					<option value="7">7</option>
+					<option value="8">8</option>
+					<option value="9">9</option>
+				</select> Tables with
+				<select id="num_of_chairs1">
+					<option value="0">----</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+					<option value="5">5</option>
+					<option value="6">6</option>
+					<option value="7">7</option>
+					<option value="8">8</option>
+					<option value="9">9</option>
+				</select> chairs each
+				</h3>
+				<p>and</p>
+				<h3> 
+				<select id="num_of_tables2"> 
+					<option value="0">----</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+					<option value="5">5</option>
+					<option value="6">6</option>
+					<option value="7">7</option>
+					<option value="8">8</option>
+					<option value="9">9</option>
+				</select> Tables with 
+				<select id="num_of_chairs2">
+					<option value="0">----</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+					<option value="5">5</option>
+					<option value="6">6</option>
+					<option value="7">7</option>
+					<option value="8">8</option>
+					<option value="9">9</option>
+				</select> chairs each
+				</h3>
+			</div>
+			<div id="generator">
+				<h2>Which Grade?</h2>
+				<select id="group_of_kids"> 
+					<option value="0">---------------</option>
+					{{#groupList}}
+					<option value="{{groupName}}">Class of {{groupName}}</option>
+					{{/groupList}}
+				</select>
+				<br>
+				<a href="loading" class="generate">Generate Tables</a>
+			</div>
+			<h4 class="message">If you are not ready to generate yet,
+				<a href="#"> return home </a> or <a href="#edit">edit lists.</a>
+			</h4>
+		</div>
+
+		</div> <!-- main -->
+
+		<div id="footer">
+			<p> Design by Leela Ghaemmaghami  |  Lunch Table Generator (c) 2016</p>
+		</div>
+		</div>
+		<div id="loading">
+			<img src= "../images/progress.gif" width="60%">
+			<p id="load"></p>
+		</div>
+	</body>
+</html>
